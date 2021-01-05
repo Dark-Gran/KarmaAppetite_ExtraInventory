@@ -22,6 +22,7 @@ public class KarmaAppetite_ExtraInventory : PartialityMod
     public override void OnEnable()
     {
         base.OnEnable();
+        patch_OverWorld.Patch();
         patch_Player.Patch();
         patch_PlayerGraphics.Patch();
         patch_PlayerProgression.Patch();
@@ -38,6 +39,111 @@ public class KarmaAppetite_ExtraInventory : PartialityMod
     public static string InventorySave;
 
     public static int MaxSize = 1;
+
+    public static void AddInventory(StoryGameSession self, AbstractCreature player)
+    {
+        foreach (AbstractCreature ac in self.Players)
+        {
+            if (ac == player && !Inventories.ContainsKey((ac.state as PlayerState).playerNumber))
+            {
+                if (InventorySave != null && InventorySave != string.Empty)
+                {
+                    List<AbstractPhysicalObject> content = new List<AbstractPhysicalObject>();
+
+                    string[] arrayPlayers = Regex.Split(InventorySave, "<svC>");
+
+                    for (int m = 0; m < arrayPlayers.Length; m++)
+                    {
+
+                        string[] arrayContent = Regex.Split(arrayPlayers[m], "<svD>");
+
+                        if (int.Parse(arrayContent[0]) == (player.state as PlayerState).playerNumber)
+                        {
+
+                            for (int n = 1; n < arrayContent.Length; n++)
+                            {
+                                AbstractPhysicalObject apo = null;
+
+                                if (arrayContent[n].Contains("<oA>"))
+                                {
+                                    apo = SaveState.AbstractPhysicalObjectFromString(self.game.world, arrayContent[n]);
+                                }
+                                else if (arrayContent[n].Contains("<cA>"))
+                                {
+                                    apo = SaveState.AbstractCreatureFromString(self.game.world, arrayContent[n], false);
+                                }
+                                if (apo != null)
+                                {
+                                    apo.pos = ac.pos;
+                                }
+                                content.Add(apo);
+                            }
+
+                        }
+
+                    }
+                    Inventories.Add((ac.state as PlayerState).playerNumber, content);
+                }
+                else
+                {
+                    Inventories.Add((ac.state as PlayerState).playerNumber, new List<AbstractPhysicalObject>());
+                }
+            }
+        }
+    }
+
+    public static void ReloadInventories(StoryGameSession session)
+    {
+        Inventories.Clear();
+
+        foreach (AbstractCreature ac in session.Players)
+        {
+
+            if (InventorySave != null && InventorySave != string.Empty)
+            {
+                List<AbstractPhysicalObject> content = new List<AbstractPhysicalObject>();
+
+                string[] arrayPlayers = Regex.Split(InventorySave, "<svC>");
+
+                for (int m = 0; m < arrayPlayers.Length; m++)
+                {
+
+                    string[] arrayContent = Regex.Split(arrayPlayers[m], "<svD>");
+
+                    if (int.Parse(arrayContent[0]) == (ac.state as PlayerState).playerNumber)
+                    {
+
+                        for (int n = 1; n < arrayContent.Length; n++)
+                        {
+                            AbstractPhysicalObject apo = null;
+
+                            if (arrayContent[n].Contains("<oA>"))
+                            {
+                                apo = SaveState.AbstractPhysicalObjectFromString(session.game.world, arrayContent[n]);
+                            }
+                            else if (arrayContent[n].Contains("<cA>"))
+                            {
+                                apo = SaveState.AbstractCreatureFromString(session.game.world, arrayContent[n], false);
+                            }
+                            if (apo != null)
+                            {
+                                apo.pos = ac.pos;
+                            }
+                            content.Add(apo);
+                        }
+
+                    }
+
+                }
+                Inventories.Add((ac.state as PlayerState).playerNumber, content);
+            }
+            else
+            {
+                Inventories.Add((ac.state as PlayerState).playerNumber, new List<AbstractPhysicalObject>());
+            }
+        }
+    }
+
     public static bool HasSomethingInInventory(Player player)
     {
         if (Inventories.ContainsKey(player.playerState.playerNumber) && Inventories[player.playerState.playerNumber] != null)

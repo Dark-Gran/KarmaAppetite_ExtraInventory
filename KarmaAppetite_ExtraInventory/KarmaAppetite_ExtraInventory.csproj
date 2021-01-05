@@ -56,13 +56,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BeeScript.cs" />
+    <Compile Include="patch_OverWorld.cs" />
     <Compile Include="patch_Player.cs" />
     <Compile Include="KarmaAppetite_ExtraInventory.cs" />
     <Compile Include="patch_PlayerGraphics.cs" />
     <Compile Include="patch_PlayerProgression.cs" />
-    <Compile Include="patch_StoryGameSession.cs" />
     <Compile Include="patch_SaveState.cs" />
     <Compile Include="patch_SlugcatHand.cs" />
+    <Compile Include="patch_StoryGameSession.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
