@@ -92,6 +92,36 @@ public class KarmaAppetite_ExtraInventory : PartialityMod
         }
     }
 
+    public static void RecreateSave(StoryGameSession session)
+    {
+        string text = string.Empty;
+        int m = 0;
+        foreach (var kvp in Inventories)
+        {
+
+            if (kvp.Value.Count > 0)
+            {
+
+                text = text + kvp.Key + "<svD>";
+
+                for (int n = 0; n < kvp.Value.Count; n++)
+                {
+                    string text2 = text;
+                    text = string.Concat(new object[]
+                    {
+                        text2,
+                        kvp.Value[n].ToString(),
+                        (n >= kvp.Value.Count - 1) ? string.Empty : "<svD>"
+                    });
+                }
+
+                text += (m >= Inventories.Count - 1) ? string.Empty : "svC";
+            }
+            m++;
+        }
+        InventorySave = text;
+    }
+
     public static void ReloadInventories(StoryGameSession session)
     {
         Inventories.Clear();
@@ -136,7 +166,7 @@ public class KarmaAppetite_ExtraInventory : PartialityMod
 
                 }
                 Inventories.Add((ac.state as PlayerState).playerNumber, content);
-            }
+            } 
             else
             {
                 Inventories.Add((ac.state as PlayerState).playerNumber, new List<AbstractPhysicalObject>());

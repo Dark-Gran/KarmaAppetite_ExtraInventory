@@ -12,6 +12,7 @@ public class patch_OverWorld
         orig.Invoke(self);
         if (self.game.session is StoryGameSession)
         {
+            KarmaAppetite_ExtraInventory.RecreateSave(self.game.session as StoryGameSession);
             KarmaAppetite_ExtraInventory.ReloadInventories(self.game.session as StoryGameSession);
         }
     }

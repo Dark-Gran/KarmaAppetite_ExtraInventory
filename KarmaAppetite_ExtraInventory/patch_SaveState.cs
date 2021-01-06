@@ -200,19 +200,15 @@ public class patch_SaveState
 		}
 		if (KarmaAppetite_ExtraInventory.SaveEnabled && KarmaAppetite_ExtraInventory.Inventories.Count > 0)
         {
-			
+
+			text += "EXTRAINVENTORY<svB>";
 			int m = 0;
-			bool head = false;
+
 			foreach (var kvp in KarmaAppetite_ExtraInventory.Inventories)
 				{
 
 				if (kvp.Value.Count > 0)
-				{
-					if (!head)
-					{
-						text += "EXTRAINVENTORY<svB>";
-						head = true;
-					}
+				{	
 
 					text = text + kvp.Key + "<svD>";
 
